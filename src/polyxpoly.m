@@ -37,6 +37,10 @@ function [xi, yi, ii] = polyxpoly(x1, y1, x2, y2, filterCode)
         xi = xi(index);
         yi = yi(index);
     else
+        % Ensure that intersections are reported only once.
+        if numel(xi) > 1
+            [xi, yi, ii] = filterIntersections(xi,yi,ii);
+        end
         if strcmp(filterCode,'unique')
             warning('''%s'' flag is ignored when third output (%s) is requested.', ...
                 'unique', 'II')
@@ -44,7 +48,7 @@ function [xi, yi, ii] = polyxpoly(x1, y1, x2, y2, filterCode)
     end
 end
 
-
+%--------------------------------------------------------------------------
 function [xi,yi,ii] = IntersecPointAll(x1,y1,x2,y2)
 %INTERSECPOINTALL  Unfiltered line or polygon intersection points.
 %   [XI,YI,II] = INTERSECPOINTALL(X1,Y1,X2,Y2) returns the unfiltered intersection 
@@ -52,8 +56,12 @@ function [xi,yi,ii] = IntersecPointAll(x1,y1,x2,y2)
 %   of line segment numbers corresponding to the intersection points.
 %   Note: intersection points are ordered from lowest to hightest line 
 %   segment numbers.
-    xi = [];
-    yi = [];
+    xi = [1 1];
+    yi = [1 2];
     ii = [];
 end
 
+%--------------------------------------------------------------------------
+function [xi,yi,ii] = filterIntersections(xi,yi,ii)
+
+end
