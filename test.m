@@ -10,6 +10,6 @@ hold on;
 x2 = [0 7];
 y2 = [0 6];
 plot(x2,y2);
-[xi, yi] = polyxpoly(x1,y1,x2,y2,'unique') ;
+[xi, yi,ii] = polyxpoly(x1,y1,x2,y2,'unique') ;
 
 plot(xi,yi,'*r');
