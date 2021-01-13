@@ -23,13 +23,18 @@ function [xi, yi, ii] = polyxpoly(x1, y1, x2, y2, filterCode)
         filterCode = validatestring(filterCode, {'all','unique'});
     end
     
+    % convert to column vectors
+    x1 = x1(:);
+    y1 = y1(:);
+    x2 = x2(:);
+    y2 = y2(:);
+    
     % check x and y vectors
     checkxyvector(x1,y1)
     checkxyvector(x2,y2)
     
     % compute all intersection points
     [xi, yi, ii] = IntersecPointAll(x1,y1,x2,y2);
-    if isempty([xi, yi, ii]), return; end
     
     % format intersection points according to type and filterCode
     if strcmp(filterCode,'unique') && (nargout < 3)
@@ -60,10 +65,6 @@ function [xi,yi,ii] = IntersecPointAll(x1,y1,x2,y2)
     err = eps*1e5;
 
     % form line segment matrices
-    x1 = x1(:);
-    y1 = y1(:);
-    x2 = x2(:);
-    y2 = y2(:);
     xs1 = [x1 [x1(2:end); x1(1)]];
     ys1 = [y1 [y1(2:end); y1(1)]];
     xs2 = [x2 [x2(2:end); x2(1)]];
