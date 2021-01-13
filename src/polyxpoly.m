@@ -87,7 +87,6 @@ function [xi,yi,ii] = IntersecPointAll(x1,y1,x2,y2)
     warning off
     m1 = (Y1(:,2) - Y1(:,1)) ./ (X1(:,2) - X1(:,1));
     m2 = (Y2(:,2) - Y2(:,1)) ./ (X2(:,2) - X2(:,1));
-    % m1(find(m1==-inf)) = inf;  m2(find(m2==-inf)) = inf;
     m1(find(abs(m1)>1/err)) = inf;  m2(find(abs(m2)>1/err)) = inf;
     warning(w)
 
@@ -103,15 +102,12 @@ function [xi,yi,ii] = IntersecPointAll(x1,y1,x2,y2)
 
     % parallel lines (do not intersect except for similar lines)
     % for similar lines, take the low and high points
-    % idx = find(m1==m2);
     idx = find( abs(m1-m2)<err | (isinf(m1)&isinf(m2)) );
     if ~isempty(idx)
     % non-similar lines
-    % 	sub = find(b1(idx)~=b2(idx));  j = idx(sub);
         sub = find(abs(b1(idx)-b2(idx))>err);  j = idx(sub);
         x0(j) = nan;  y0(j) = nan;
     % similar lines (non-vertical)
-    % 	sub = find(b1(idx)==b2(idx) & m1(idx)~=inf);  j = idx(sub);
         sub = find(abs(b1(idx)-b2(idx))<err & m1(idx)~=inf);  j = idx(sub);
         Xlo = max([min(X1(j,:),[],2) min(X2(j,:),[],2)],[],2);
         Xhi = min([max(X1(j,:),[],2) max(X2(j,:),[],2)],[],2);
@@ -123,18 +119,8 @@ function [xi,yi,ii] = IntersecPointAll(x1,y1,x2,y2)
             x0(j(j1)) = Xlo(j1) + i*Xhi(j1);
             y0(j(j1)) = (Y1(j(j1)) + m1(j(j1)).*(Xlo(j1) - X1(j(j1)))) + ...
                          i*(Y1(j(j1)) + m1(j(j1)).*(Xhi(j1) - X1(j(j1))));
-    % 		if Xlo==Xhi
-    % 		if abs(Xlo-Xhi)<=eps
-    % 			x0(j) = Xlo;
-    % 			y0(j) = Y1(j) + m1(j).*(Xlo - X1(j));
-    % 		else
-    % 			x0(j) = Xlo + i*Xhi;
-    % 			y0(j) = (Y1(j) + m1(j).*(Xlo - X1(j))) + ...
-    % 					 i*(Y1(j) + m1(j).*(Xhi - X1(j)));
-    % 		end
         end
     % similar lines (vertical)
-    % 	sub = find(b1(idx)==b2(idx) & m1(idx)==inf);  j = idx(sub);
         sub = find(abs(b1(idx)-b2(idx))<err & m1(idx)==inf);  j = idx(sub);
         Ylo = max([min(Y1(j,:),[],2) min(Y2(j,:),[],2)],[],2);
         Yhi = min([max(Y1(j,:),[],2) max(Y2(j,:),[],2)],[],2);
@@ -145,11 +131,9 @@ function [xi,yi,ii] = IntersecPointAll(x1,y1,x2,y2)
     end
 
     % non-parallel lines
-    % idx = find(m1~=m2);
     idx = find(abs(m1-m2)>err);
     if ~isempty(idx)
     % non-vertical/non-horizontal lines
-    % 	sub = find(m1(idx)~=inf & m2(idx)~=inf & m1(idx)~=0 & m2(idx)~=0);
         sub = find(m1(idx)~=inf & m2(idx)~=inf & ...
                    abs(m1(idx))>eps & abs(m2(idx))>eps);
         j = idx(sub);
@@ -165,24 +149,13 @@ function [xi,yi,ii] = IntersecPointAll(x1,y1,x2,y2)
         x0(j) = X2(j);
         y0(j) = Y1(j) + m1(j).*(x0(j)-X1(j));
     % first line horizontal, second line non-vertical
-    % 	sub = find(m1(idx)==0 & m2(idx)~=inf);  j = idx(sub);
         sub = find(abs(m1(idx))<=eps & m2(idx)~=inf);  j = idx(sub);
         y0(j) = Y1(j);
         x0(j) = (Y1(j) - Y2(j) + m2(j).*X2(j)) ./ m2(j);
     % second line horizontal, first line non-vertical
-    % 	sub = find(m2(idx)==0 & m1(idx)~=inf);  j = idx(sub);
         sub = find(abs(m2(idx))<=eps & m1(idx)~=inf);  j = idx(sub);
         y0(j) = Y2(j);
         x0(j) = (Y1(j) - y0(j) - m1(j).*X1(j)) ./ -m1(j);
-    % connecting line segments (exact solution)
-    % 	sub1 = find(X1(idx,1)==X2(idx,1) & Y1(idx,1)==Y2(idx,1));
-    % 	sub2 = find(X1(idx,1)==X2(idx,2) & Y1(idx,1)==Y2(idx,2));
-    % 	sub3 = find(X1(idx,2)==X2(idx,1) & Y1(idx,2)==Y2(idx,1));
-    % 	sub4 = find(X1(idx,2)==X2(idx,2) & Y1(idx,2)==Y2(idx,2));
-    % 	j1 = idx(sort([sub1; sub2]));
-    % 	j2 = idx(sort([sub3; sub4]));
-    % 	x0(j1) = X1(j1,1);  y0(j1) = Y1(j1,1);
-    % 	x0(j2) = X1(j2,2);  y0(j2) = Y1(j2,2);
     end
 
     % throw away points that lie outside of line segments
@@ -190,7 +163,6 @@ function [xi,yi,ii] = IntersecPointAll(x1,y1,x2,y2)
     dy1 = [min(Y1,[],2)-y0, y0-max(Y1,[],2)];
     dx2 = [min(X2,[],2)-x0, x0-max(X2,[],2)];
     dy2 = [min(Y2,[],2)-y0, y0-max(Y2,[],2)];
-    % [irow,icol] = find([dx1 dy1 dx2 dy2]>1e-14);
     [irow,icol] = find([dx1 dy1 dx2 dy2]>err);
     idx = sort(unique(irow));
     x0(idx) = nan;
@@ -207,7 +179,6 @@ function [xi,yi,ii] = IntersecPointAll(x1,y1,x2,y2)
 
     % combine all intersection points
     indx = union(find(imag(xi)),find(imag(yi)));
-    % indx = find(imag(xi));
     for n=length(indx):-1:1
         j = indx(n);
         ii = [ii(1:j-1,:); ii(j,:); ii(j:end,:)];

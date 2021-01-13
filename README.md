@@ -9,15 +9,16 @@ Line or polygon intersection points.
 ```
 ## Description
 
-`[xi,yi] = polyxpoly(x1,y1,x2,y2)` returns the intersection points of two polylines in a planar, Cartesian system, with vertices defined by x1, y1, x2 and y2. The output arguments, xi and yi, contain the x- and y-coordinates of each point at which a segment of the first polyline intersects a segment of the second. In the case of overlapping, collinear segments, the intersection is actually a line segment rather than a point, and both endpoints are included in xi, yi.
+<span style="color:blue">`[xi,yi] = polyxpoly(x1,y1,x2,y2)`</span> returns the intersection points of two polylines in a planar, Cartesian system, with vertices defined by x1, y1, x2 and y2. The output arguments, xi and yi, contain the x- and y-coordinates of each point at which a segment of the first polyline intersects a segment of the second. In the case of overlapping, collinear segments, the intersection is actually a line segment rather than a point, and both endpoints are included in xi, yi.
+
 
 ----
 
-`[xi,yi,ii] = polyxpoly(___)` returns a two-column array of line segment indices corresponding to the intersection points. The k-th row of ii indicates which polyline segments give rise to the intersection point xi(k), yi(k).
+<span style="color:blue">`[xi,yi,ii] = polyxpoly(...)`</span> returns a two-column array of line segment indices corresponding to the intersection points. The k-th row of ii indicates which polyline segments give rise to the intersection point xi(k), yi(k).
 
 ----
 
-`[xi,yi] = polyxpoly(___,'unique')` filters out duplicate intersections, which may result if the input polylines are self-intersecting.
+<span style="color:blue">`[xi,yi] = polyxpoly(...,'unique')`</span> filters out duplicate intersections, which may result if the input polylines are self-intersecting.
 
 ----
 
