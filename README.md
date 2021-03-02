@@ -39,6 +39,7 @@ Intersect the straight segment with the rectangle.
 [xi, yi,ii] = polyxpoly(x1,y1,x2,y2) ;
 plot(xi,yi,'*r');
 ```
+![キャプチャ](https://user-images.githubusercontent.com/29532902/109606306-cdd4f400-7b69-11eb-916e-3357bdcc9309.PNG)
 
 
 ## Reference
